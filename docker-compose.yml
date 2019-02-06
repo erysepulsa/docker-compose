@@ -1,0 +1,126 @@
+version: '2'
+
+services:
+  
+  # docker stack --------------------------------------
+  # https://portainer.io/
+  portainer:
+    image: portainer/portainer
+    ports:
+      - "9100:9000"
+    command: -H unix:///var/run/docker.sock --no-auth
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    restart: always
+    
+  mysql_server:
+    image: mariadb:10.1
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - 3306:3306
+    restart: always
+    volumes:
+        - ./data/mysql:/var/lib/mysql
+        - ./mysql-custom.cnf:/etc/mysql/conf.d/mysql-custom.cnf
+
+  redis_server:
+    image: redis:3.2.11
+    command: ["redis-server"]
+    restart: always
+    ports:
+      - 6379:6379
+
+  mongodb_server:
+    image: mongo:3.6
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/mongodb:/data/db
+    ports:
+      - 27017:27017
+    command: ["mongod", "--master", "--smallfiles", "--logpath=/dev/null"]
+
+  rabbitmq_server:
+    image: rabbitmq:3.7.4-management
+    hostname: "rabbitmq.local"
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "X0DYOLVQWLISXX9G"
+      RABBITMQ_DEFAULT_USER: "guest"
+      RABBITMQ_DEFAULT_PASS: "guest"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - 15672:15672
+      - 5672:5672
+
+  postgres_server:
+    image: postgres:10.4
+    restart: always
+    environment:
+      POSTGRES_USER: "root"
+      POSTGRES_PASSWORD: "root"
+    ports:
+      - 5432:5432
+
+  adminer:
+    image: adminer
+    restart: always
+    hostname: "adminer.local"
+    ports:
+      - 8090:8080
+
+  swagger_editor:
+    image: swaggerapi/swagger-editor
+    hostname: "swagger-editor.local"
+    ports:
+      - 8091:8080
+
+  # multiple vhost setting --------------------------------------
+  web_1:
+    build: ./nginx
+    ports:
+      - 8080:80
+    volumes:
+      - ./app/web_1:/myapp/web_1
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/sites-enabled/web_1.local.conf:/etc/nginx/sites-enabled/web_1.local.conf
+      - ./logs:/logs
+    links:
+      - php
+    hostname: "web_1.local"
+
+  web_2:
+    build: ./nginx
+    ports:
+      - 8081:80
+    volumes:
+      - ./app/web_2:/myapp/web_2
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - ./nginx/sites-enabled/web_2.local.conf:/etc/nginx/sites-enabled/web_2.local.conf
+      - ./logs:/logs
+    links:
+      - php
+    hostname: "web_2.local"
+
+  # new php ver 7.1
+  php:
+    build: ./php
+    volumes:
+      - ./app:/myapp
+  # older php ver 7.0
+  php70:
+    build: ./php-70
+    volumes:
+      - ./app:/myapp
+
+volumes:
+  portainer_data:
+
+networks: 
+  default:
+    external:
+      name: localnetwork
