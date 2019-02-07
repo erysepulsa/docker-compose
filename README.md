@@ -1,32 +1,33 @@
 # docker-compose
 
-Docker documentation for the first time (mac install)
+Docker install (localhost) documentation for the first time.
 
-Get started : https://docs.docker.com/get-started/
+New in docker? please get started : https://docs.docker.com/get-started/
 
 This setup is itended for local development machine with multi domain via Nginx vhost.
 
 ## This docker starter included :
 * PHP-FPM (php 7.1)
-* NGINX (Web Server)
+* NGINX (web server)
 * MYSQL (mariadb:10.1)
 * POSTGREE (postgres:10.4)
-* PORTAINER (Docker Container Management)
+* PORTAINER (docker container management)
 * REDIS (redis:3.2.11)
 * MONGODB (mongo:3.6)
 * RABBITMQ (rabbitmq:3.7.4-management)
-* ADMINER (Database Management)
-* SWAGGER EDITOR (API Documentation)
+* ADMINER (database management)
+* SWAGGER EDITOR (API documentation)
 
 ## Install docker for mac :
 
 Below is step by step to install docker
-* Install docker apps at : https://docs.docker.com/docker-for-mac/install/
-* Clone this github repo on your local computer folder (ex. /docker)
+* Install docker apps desktop at : https://docs.docker.com/docker-for-mac/install/
+* Clone this github repo on your local computer root ```(ex. ~/docker)```
 * Setting or edit your file ```Nginx, docker-compose.yml, Dockerfile, /etc/hosts, etc``` (see instruction below)
+* Make sure there is no port conflict on multi vhost, please check file ```docker-compose.yml```
 * Create Network via docker command (see instruction below)
-* Run this on clone docker folder ```$docker-compose up --build``` to build & download container images (make sure it downloaded & run smoothly without error)
-* Open your browser to test your starter included (portainer, swagger-editor, rabbitmq management, adminer, etc)
+* Run this command on your clone docker folder ```$docker-compose up --build``` to build & download container images (make sure all container images downloaded & run smoothly without error)
+* Open your browser to test your starter included (portainer, swagger-editor, rabbitmq management, adminer, etc - see instruction below)
 
 ## How To Run
 
@@ -38,10 +39,10 @@ Below is step by step to install docker
 ## Docker command reference
 
 ```
-# $docker-compose build [service.name] - only build single service
+# $docker-compose build [service.name] - (to build single service)
 # $docker restart $(docker ps -q) - restart/stop all running container process (-q quiet | -a all mode)
 # $docker ps -a - (get all process list)
-# $docker inspect [service.name] - inspect container IP address & detail build
+# $docker inspect [service.name] - (inspect container IP address & detail build)
 # $docker exec -it [service.name/container_id] sh - (bash prompt to get access into images/container via SSH terminal)
 # $docker volume ls - (get volume space list consume)
 # $docker images - (get list of docker image)
@@ -51,7 +52,7 @@ Below is step by step to install docker
 
 ## Nginx
 
-Every app need a container for it self (i.e web_1 & web_2) and before run docker please to make sure to map it in different port (i.e web_1 on 8080, web_2 on 8081) to avoid port conflict. Default vhost configuration for localhost are setup in ```./nginx/sites-enabled``` please add/change it for new web/project container.
+Every app need a container for it self ```(i.e web_1 & web_2)``` and before run docker please to make sure to map it in different port ```(i.e web_1 on 8080, web_2 on 8081)``` to avoid port conflict. Default vhost configuration for localhost are setup in ```./nginx/sites-enabled``` please add/change it for new web/project container.
 
 ### Multiple Vhost (ip.address mapping /etc/hosts)
 
@@ -59,7 +60,7 @@ In multiple vhost, there is needed local domain name and IP mapping on to access
 
 ```
 Example :
-0.0.0.0		portainer.local
+0.0.0.0     portainer.local
 0.0.0.0     mysql.local
 0.0.0.0     mongo.local
 0.0.0.0     redis.local
@@ -73,7 +74,7 @@ Example :
 
 Before this container can be accessible from your container, you need to create a network name ```my-shared-network``` or with other name which you must define it on ```docker-compose.yml``` (ex. localnetwork)
 
-Create docker network with this command :
+Create docker network with this command (and copy name to your docker-compose.yml) :
 
 ```
 # $docker network create my-shared-network
