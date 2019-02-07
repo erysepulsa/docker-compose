@@ -90,6 +90,10 @@ I'm using vhost domain to separate webapp. You can add more webapp based on PHP 
 * Up and rebuild (if necessary) docker with ```$docker-compose up --build```. Makesure this step is success and docker run smoothly.
 * Set your ```hosts file``` and add my_webapp.local domain into it, so your host OS can access it. i.e ```0.0.0.0	my_webapp.local```
 
+## NOTE
+* Everytime shutdown/stop docker container, IP Address container might be changed so you need to edit your ```/etc/hosts``` file before you can access it (to check ip.address container use command ```$docker inspect [container_name]```).
+
+
 ## MySQL (MariaDB 10.1)
 
 MySQL persistence data will be saved into ./data/mysql within this root project, so it will still available if you're running docker-compose down.
@@ -162,8 +166,3 @@ Host : 0.0.0.0:9100
 You can access it with its domain http://portainer.local:9100/ after you add an entries into your host OS ```/etc/hosts```.
 
 0.0.0.0	portainer.local
-
-
-## NOTE
-* everytime shutdown/stop docker container, IP Address container might be changed so you need to edit your ```/etc/hosts``` file before you can access it (to check ip.address container use command ```$docker inspect [container_name]```).
-
