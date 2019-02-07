@@ -21,11 +21,11 @@ This setup is itended for local development machine with multi domain via Nginx 
 ## Install docker for mac :
 
 Below is step by step to install docker
-* Install docker desktop CE apps at : https://docs.docker.com/docker-for-mac/install/
+* Install docker apps at : https://docs.docker.com/docker-for-mac/install/
 * Clone this github repo on your local computer folder (ex. /docker)
 * Setting or edit your file ```Nginx, docker-compose.yml, Dockerfile, /etc/hosts, etc``` (see instruction below)
 * Create Network via docker command (see instruction below)
-* Run in clone docker folder ```$docker-compose up --build``` to build & download container images (make sure it downloaded & run smoothly without error)
+* Run this on clone docker folder ```$docker-compose up --build``` to build & download container images (make sure it downloaded & run smoothly without error)
 * Open your browser to test your starter included (portainer, swagger-editor, rabbitmq management, adminer, etc)
 
 ## How To Run
@@ -57,6 +57,7 @@ Every app need a container for it self (i.e web_1 & web_2) and before run docker
 
 In multiple vhost, there is needed local domain name and IP mapping on to access it, don't forget to setup your ```/etc/hosts``` file.
 
+```
 Example :
 0.0.0.0		portainer.local
 0.0.0.0     mysql.local
@@ -66,6 +67,7 @@ Example :
 0.0.0.0     postgree.local
 0.0.0.0     adminer.local
 0.0.0.0     swagger-editor.local
+```
 
 ## Create Network and Support Stack
 
@@ -91,32 +93,41 @@ I'm using vhost domain to separate webapp. You can add more webapp based on PHP 
 
 MySQL persistence data will be saved into ./data/mysql within this root project, so it will still available if you're running docker-compose down.
 
+```
 Host : 0.0.0.0:3306
 User : root
 Pass : {set in MYSQL_ROOT_PASSWORD in docker-compose}
+```
 
 ## MongoDB (mongo:3.6)
 
 Same with MySQL, data are persistence and will be saved in ./data/mongodb.
 
+```
 Host : 0.0.0.0:27017
 User : None
 Pass : None
+```
 
 ## Redis (redis:3.2.11)
 
+```
 Host : 0.0.0.0:6379
 User : None
 Pass : None
+```
 
 ## RabbitMQ (rabbitmq:3.7.4-management)
 
 Installed with management plugin.
 
+```
 Web Management Admin : 0.0.0.0:15672 (need user & pass login)
 Service Host : 0.0.0.0:5672
 User : guest
 Pass : guest
+```
+
 You can access rabbitmq admin with domain name http://rabbitmq.local:15672/ after you add an entries into your host OS ```/etc/hosts```.
 
 0.0.0.0	rabbitmq.local
@@ -130,6 +141,7 @@ Host : 0.0.0.0:5432
 ## Adminer (Database Management)
 
 Host : 0.0.0.0:8090
+
 You can access it with this domain http://adminer.local:8090/ after you add an entries into your host OS ```/etc/hosts```.
 
 0.0.0.0	adminer.local
@@ -137,6 +149,7 @@ You can access it with this domain http://adminer.local:8090/ after you add an e
 ## Swagger Editor (API Documentation)
 
 Host : 0.0.0.0:8091
+
 You can access it with its domain http://swagger-editor.local:8091/ after you add an entries into your host OS ```/etc/hosts```.
 
 0.0.0.0	swagger-editor.local
@@ -144,11 +157,12 @@ You can access it with its domain http://swagger-editor.local:8091/ after you ad
 ## Portainer (Docker Container Management)
 
 Host : 0.0.0.0:9100
+
 You can access it with its domain http://portainer.local:9100/ after you add an entries into your host OS ```/etc/hosts```.
 
 0.0.0.0	portainer.local
 
 
 ## NOTE
-* everytime shutdown/stop docker container, IP Address container might be changed so you need to edit your ```/etc/hosts``` file before you can access it (to check ip.address container use ```$docker inspect [container_name]```).
+* everytime shutdown/stop docker container, IP Address container might be changed so you need to edit your ```/etc/hosts``` file before you can access it (to check ip.address container use command ```$docker inspect [container_name]```).
 
